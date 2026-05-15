@@ -1,0 +1,25 @@
+HOW TO USE THE INSTAGRAM FOCUS SCRIPTS ON IPHONE
+
+1. INSTALL THE EXTENSION
+Download the "Userscripts" app from the Apple App Store.
+
+2. ENABLE SAFARI PERMISSIONS
+- Open "Settings" -> "Safari" -> "Extensions".
+- Find "Userscripts" and switch it to "ON".
+
+3. PREPARE THE SCRIPTS
+- Open the "Files" app on your iPhone.
+- Look for a folder named "Userscripts".
+- Copy the following files into this folder:
+   a) "reels.icon.remover.js" (Removes the Reels button)
+   b) "instagram.content.cleaner.js" (Removes suggested content)
+   c) "instagram.repost.remover.js" (Removes reposted posts)
+   d) "instagram.following.switcher.js" (Ensures you are always on the "Following" feed)
+
+4. START BROWSING
+- Open Safari and go to instagram.com.
+- The Reels icon will be gone.
+- Your home feed will only show original posts from accounts you follow.
+- The "Repost" icon will be removed from the action bar under every post.
+
+Enjoy your focused browsing experience!
