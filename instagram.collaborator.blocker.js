@@ -17,15 +17,19 @@
 // 
         const posts = document.querySelectorAll('article'); // Select all post articles
         posts.forEach(post => { // Iterate through each post
-            // Target the top section of the post (header or first div) // Context targeting
-            const header = post.querySelector('header') || post.firstElementChild; // Find the most likely header container
-            if (!header) return; // Skip if no top section found
+            // Locate the profile picture to find the real header container // Precision targeting
+            const profilePic = post.querySelector('img[src*="cdninstat"]') || post.querySelector('img'); // Find the avatar image
+            if (!profilePic) return; // Skip if no image found
 // 
-            // Identify unique profile links to distinguish multiple authors // Logic strategy
-            const links = header.querySelectorAll('a'); // Get all links in the header area
+            // The header is the container holding the profile pic and username // Structure identification
+            const header = profilePic.closest('header') || profilePic.closest('div[role="button"]') || profilePic.parentElement.closest('div'); // Find nearest semantic or functional container
+            if (!header) return; // Skip if no container found
+// 
+            // Identify unique profile links within the header context // Logic strategy
+            const links = header.querySelectorAll('a'); // Get all links in the isolated header area
             const uniqueProfiles = new Set(); // Use a Set to store unique usernames
 // 
-            links.forEach(link => { // Loop through identified links
+            links.forEach(link => { // Loop through header links
                 const href = link.getAttribute('href'); // Get link destination
                 if (href) { // If destination exists
                     const pathSegments = href.split('/').filter(s => s.length > 0); // Parse URL segments
@@ -36,14 +40,9 @@
                 } // End of href check
             }); // End of links loop
 // 
-            // Check for explicit "and" separators in the header text // Supplementary detection
-            const headerText = header.textContent || ''; // Retrieve all text within the header
-            const collaborationIndicators = [' and ', ' & ']; // Define common collaboration markers
-            const hasIndicator = collaborationIndicators.some(indicator => headerText.includes(indicator)); // Check for presence of indicators
-// 
-            // Determine if the post should be hidden // Decision logic
-            // A single author post will have only 1 unique profile in the set // Threshold rule
-            if (uniqueProfiles.size > 1 || hasIndicator) { // If multiple profiles or "and" text found
+            // Determine if the post should be hidden based on unique authors // Decision logic
+            // A post with collaborators will list multiple unique profile links in the header // Threshold rule
+            if (uniqueProfiles.size > 1) { // If more than one unique profile is found in the header
                 post.style.setProperty('display', 'none', 'important'); // Force hide the post
             } // End of hide check
         }); // End of posts loop
