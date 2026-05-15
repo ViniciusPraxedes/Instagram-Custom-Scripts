@@ -17,38 +17,47 @@
 // 
         const posts = document.querySelectorAll('article'); // Select all post articles
         posts.forEach(post => { // Iterate through each post
-            const header = post.querySelector('header'); // Find the post header
-            if (!header) return; // Skip if no header found
+            // Target the top section of the post (header or first div) // Context targeting
+            const header = post.querySelector('header') || post.firstElementChild; // Find the most likely header container
+            if (!header) return; // Skip if no top section found
 // 
-            const links = header.querySelectorAll('a'); // Get all links in the header
-            let profileLinkCount = 0; // Initialize profile link counter
+            // Identify unique profile links to distinguish multiple authors // Logic strategy
+            const links = header.querySelectorAll('a'); // Get all links in the header area
+            const uniqueProfiles = new Set(); // Use a Set to store unique usernames
 // 
-            links.forEach(link => { // Loop through header links
+            links.forEach(link => { // Loop through identified links
                 const href = link.getAttribute('href'); // Get link destination
-                if (href) { // If href exists
-                    const pathSegments = href.split('/').filter(s => s.length > 0); // Parse path segments
-                    if (pathSegments.length === 1 && !href.includes('explore')) { // Identify profile-pattern links
-                        profileLinkCount++; // Increment counter
-                    } // End of pattern check
+                if (href) { // If destination exists
+                    const pathSegments = href.split('/').filter(s => s.length > 0); // Parse URL segments
+                    // Profile links on mobile web typically have exactly one path segment // Pattern identification
+                    if (pathSegments.length === 1 && !href.includes('explore') && !href.includes('reels')) { // Filter for profile links
+                        uniqueProfiles.add(pathSegments[0]); // Add username to unique set
+                    } // End of profile pattern check
                 } // End of href check
             }); // End of links loop
 // 
-            const threshold = 2; // Maximum links for single-author posts
-            if (profileLinkCount > threshold) { // If collaborator detected
-                post.style.setProperty('display', 'none', 'important'); // Hide the post
-            } // End of threshold check
+            // Check for explicit "and" separators in the header text // Supplementary detection
+            const headerText = header.textContent || ''; // Retrieve all text within the header
+            const collaborationIndicators = [' and ', ' & ']; // Define common collaboration markers
+            const hasIndicator = collaborationIndicators.some(indicator => headerText.includes(indicator)); // Check for presence of indicators
+// 
+            // Determine if the post should be hidden // Decision logic
+            // A single author post will have only 1 unique profile in the set // Threshold rule
+            if (uniqueProfiles.size > 1 || hasIndicator) { // If multiple profiles or "and" text found
+                post.style.setProperty('display', 'none', 'important'); // Force hide the post
+            } // End of hide check
         }); // End of posts loop
     }; // End of blockCollaboratorPosts function
 // 
-    blockCollaboratorPosts(); // Run blocking immediately
+    blockCollaboratorPosts(); // Execute blocking immediately
 // 
-    const observer = new MutationObserver(() => { // Create observer for new content
-        blockCollaboratorPosts(); // Re-run blocking on changes
+    const observer = new MutationObserver(() => { // Watch for dynamic feed loading
+        blockCollaboratorPosts(); // Re-run logic on DOM mutations
     }); // End of observer definition
 // 
-    observer.observe(document.documentElement, { // Start monitoring DOM
-        childList: true, // Watch for new elements
-        subtree: true // Watch entire tree
+    observer.observe(document.documentElement, { // Start monitoring the page
+        childList: true, // Watch for added elements
+        subtree: true // Watch all descendant nodes
     }); // End of observer start
 // 
 })(); // End of immediate execution function
