@@ -17,11 +17,11 @@
 // 
         const posts = document.querySelectorAll('article:not([data-collab-checked])'); // Select only new, unprocessed posts
         posts.forEach(post => { // Iterate through new posts
-            post.dataset.collabChecked = 'true'; // Mark post as checked to prevent redundant processing
-// 
             // Locate the profile picture to find the real header container // Precision targeting
             const profilePic = post.querySelector('img[src*="cdninstat"]') || post.querySelector('img'); // Find the avatar image
-            if (!profilePic) return; // Skip if no image found (e.g. skeleton loaders)
+            if (!profilePic) return; // Skip if no image found (skeleton loaders) - do NOT mark as checked yet
+// 
+            post.dataset.collabChecked = 'true'; // Mark post as checked now that content is available for analysis
 // 
             // The header is the container holding the profile pic and username // Structure identification
             const header = profilePic.closest('header') || profilePic.closest('div[role="button"]') || profilePic.parentElement.closest('div'); // Find nearest semantic or functional container
@@ -42,9 +42,13 @@
                 } // End of href check
             }); // End of links loop
 // 
-            // Determine if the post should be hidden based on unique authors // Decision logic
-            // A post with collaborators will list multiple unique profile links in the header // Threshold rule
-            if (uniqueProfiles.size > 1) { // If more than one unique profile is found in the header
+            // Check for explicit "and" separators in the header text // Supplementary detection
+            const headerText = header.textContent || ''; // Retrieve all text within the header
+            const collaborationIndicators = [' and ', ' & ']; // Define common collaboration markers (English)
+            const hasIndicator = collaborationIndicators.some(indicator => headerText.includes(indicator)); // Check for presence of indicators
+// 
+            // Determine if the post should be hidden based on unique authors or text cues // Decision logic
+            if (uniqueProfiles.size > 1 || hasIndicator) { // If multiple profiles or "and" text found in header
                 post.style.setProperty('display', 'none', 'important'); // Force hide the post
             } // End of hide check
         }); // End of posts loop
