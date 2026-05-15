@@ -60,7 +60,22 @@ if (el.getAttribute('aria-label') === 'Repost' && !el.closest('section')) {
 2. Check if the element has a unique `aria-label` or `role`.
 3. Update selectors in the script and ensure the `MutationObserver` is watching the correct root element.
 
-## 6. URL-Based Feed Switching
+## 6. Collaborator Detection
+To identify posts with collaborators without relying on unstable text labels, count the profile links in the post header.
+- A standard post has 2 links to the same profile (one for the avatar image and one for the username text).
+- A collaborator post has additional links for the second and third authors.
+- **Heuristic**: If the header contains more than 2 profile-pattern links, hide the article.
+
+```javascript
+const links = header.querySelectorAll('a');
+const profileLinks = Array.from(links).filter(a => {
+    const segments = a.getAttribute('href').split('/').filter(Boolean);
+    return segments.length === 1 && !a.href.includes('explore');
+});
+if (profileLinks.length > 2) article.style.display = 'none';
+```
+
+## 7. URL-Based Feed Switching
 Instagram provides a "Following" feed variant via URL parameters. To force this feed reliably:
 - **URL Param**: Check for `?variant=following`.
 - **Navigation Fallback**: If the parameter is missing on the root path, use `window.location.replace` to redirect.

@@ -15,6 +15,7 @@ Download the "Userscripts" app from the Apple App Store.
    b) "instagram.content.cleaner.js" (Removes suggested content)
    c) "instagram.repost.remover.js" (Removes reposted posts)
    d) "instagram.following.switcher.js" (Ensures you are always on the "Following" feed)
+   e) "instagram.collaborator.blocker.js" (Removes posts with multiple collaborators)
 
 4. START BROWSING
 - Open Safari and go to instagram.com.
