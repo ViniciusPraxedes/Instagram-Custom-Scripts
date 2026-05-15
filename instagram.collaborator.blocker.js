@@ -1,7 +1,6 @@
 // ==UserScript==
 // @name         Instagram Collaborator Blocker
 // @namespace    http://tampermonkey.net/
-// @version      1.0.2
 // @description  Hides posts with collaborators on Instagram.
 // @author       Antigravity
 // @match        https://www.instagram.com/*
@@ -74,7 +73,9 @@
     let timeout; // Variable to store debounce timeout
     const observer = new MutationObserver(() => { // Initialize MutationObserver
         if (timeout) clearTimeout(timeout); // Clear previous timeout
-        timeout = setTimeout(blockCollaboratorPosts, 100); // Wait for DOM to settle before processing
+        timeout = setTimeout(() => { // Debounce execution
+            blockCollaboratorPosts(); // Run blocking logic
+        }, 100); // Wait for DOM to settle
     }); // End of observer definition
 // 
     observer.observe(document.documentElement, { // Start watching the page
