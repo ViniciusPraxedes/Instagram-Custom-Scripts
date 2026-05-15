@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Instagram Collaborator Blocker
 // @namespace    http://tampermonkey.net/
-// @version      1.0.1
+// @version      1.0.2
 // @description  Hides posts with collaborators on Instagram.
 // @author       Antigravity
 // @match        https://www.instagram.com/*
@@ -12,14 +12,15 @@
 (function() { // Start of immediate execution function
     'use strict'; // Enable strict mode
 // 
-    // Helper function to find the lowest common ancestor of two elements // DOM Utility
-    const findCommonAncestor = (el1, el2) => { // Define the search function
+    // Helper function to find the lowest common ancestor within a limit // DOM Utility
+    const findCommonAncestor = (el1, el2, limit) => { // Define the search function with boundary
         let parent = el1.parentElement; // Start with the parent of the first element
-        while (parent) { // Traverse up the tree
+        // Traverse up until we hit the limit or the root // Boundary control
+        while (parent && parent !== limit) { // Loop while parent exists and is within post
             if (parent.contains(el2)) return parent; // Return if it also contains the second element
             parent = parent.parentElement; // Move up one level
         } // End of traversal loop
-        return null; // Return null if no common ancestor found
+        return null; // Return null if no common ancestor found within the limit
     }; // End of helper function
 // 
     const blockCollaboratorPosts = () => { // Function to hide collaborator posts
@@ -35,9 +36,10 @@
 // 
             post.dataset.collabChecked = 'true'; // Mark post as analyzed once anchors are available
 // 
-            // Identify the header by finding the common ancestor of both anchors // Context isolation
-            const header = findCommonAncestor(profilePic, optionsIcon); // Find the container holding both pic and menu
-            if (!header) return; // Skip if no valid header container found
+            // Identify the header by finding the common ancestor strictly within the article // Context isolation
+            const header = findCommonAncestor(profilePic, optionsIcon, post); // Find the container holding both pic and menu
+            // Safety: Ensure the header is actually in the top part of the article // Layout check
+            if (!header || header.offsetTop > 150) return; // Skip if no valid header or if it's too far down
 // 
             // Analyze unique profile links within this specific header container // Logic strategy
             const links = header.querySelectorAll('a'); // Get all links in the isolated header area
@@ -57,7 +59,7 @@
             // Check for explicit "and" separators in the text of the header // Supplementary detection
             const headerText = header.textContent || ''; // Retrieve all text within the header
             const collaborationIndicators = [' and ', ' & ']; // Define common collaboration markers
-            const hasIndicator = collaborationIndicators.some(indicator => headerText.includes(indicator)); // Check for markers
+            const hasIndicator = collaborationIndicators.some(indicator => headerText.includes(indicator)); // Check for markers in text
 // 
             // Determine if the post should be hidden // Decision logic
             if (uniqueProfiles.size > 1 || hasIndicator) { // If multiple profiles or "and" text found in header area
