@@ -1,13 +1,13 @@
-// ==UserScript== // Userscript metadata header
-// @name         Instagram Collaborator Blocker // Name of the userscript
-// @namespace    http://tampermonkey.net/ // Namespace identifier
-// @version      1.0 // Script version
-// @description  Blocks and hides Instagram posts that have collaborators in the header. // Purpose of the script
-// @author       Antigravity // Creator of the script
-// @match        https://www.instagram.com/* // Domains where the script will run
-// @grant        none // No special permissions required
-// @run-at       document-start // Execute as soon as the document starts loading
-// ==/UserScript== // End of userscript metadata header
+// ==UserScript==
+// @name         Instagram Collaborator Blocker
+// @namespace    http://tampermonkey.net/
+// @version      1.0
+// @description  Blocks and hides Instagram posts that have collaborators in the header.
+// @author       Antigravity
+// @match        https://www.instagram.com/*
+// @grant        none
+// @run-at       document-start
+// ==/UserScript==
 
 (function() { // Start of the main execution function
     'use strict'; // Enforce strict JavaScript mode for better error catching
