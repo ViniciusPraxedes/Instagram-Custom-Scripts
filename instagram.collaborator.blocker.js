@@ -1,13 +1,13 @@
-// ==UserScript== // Userscript metadata header
-// @name         Instagram Collaborator Blocker // Name of the script
-// @namespace    http://tampermonkey.net/ // Namespace for the script
-// @version      1.0 // Version of the script
-// @description  Blocks and hides Instagram posts that have collaborators in the header. // Description of the script
-// @author       Antigravity // Author of the script
-// @match        https://www.instagram.com/* // URL patterns to match
-// @grant        none // No special permissions
-// @run-at       document-start // Run as soon as the document starts
-// ==/UserScript== // End of userscript metadata header
+// ==UserScript==
+// @name         Instagram Collaborator Blocker
+// @namespace    http://tampermonkey.net/
+// @version      1.0
+// @description  Blocks and hides Instagram posts that have collaborators in the header.
+// @author       Antigravity
+// @match        https://www.instagram.com/*
+// @grant        none
+// @run-at       document-start
+// ==/UserScript==
 // 
 (function() { // Start of the main execution function
     'use strict'; // Enforce strict JavaScript mode for better error catching
@@ -66,7 +66,7 @@
     // Start watching the document for changes // Observer activation
     observer.observe(document.documentElement, { // Attach observer to the root element
         childList: true, // Monitor addition of new elements (new posts)
-        subtree: true // Monitor all nested elements in the tree
-    }); // End of observer configuration
+        subtree: true // Monitor all descendant nodes
+    }); // End of observer observation
 // 
 })(); // End of immediate execution function
