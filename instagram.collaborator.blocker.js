@@ -15,11 +15,13 @@
     const blockCollaboratorPosts = () => { // Function to hide collaborator posts
         if (window.location.pathname !== '/' && window.location.pathname !== '') return; // Only run on the home feed
 // 
-        const posts = document.querySelectorAll('article'); // Select all post articles
-        posts.forEach(post => { // Iterate through each post
+        const posts = document.querySelectorAll('article:not([data-collab-checked])'); // Select only new, unprocessed posts
+        posts.forEach(post => { // Iterate through new posts
+            post.dataset.collabChecked = 'true'; // Mark post as checked to prevent redundant processing
+// 
             // Locate the profile picture to find the real header container // Precision targeting
             const profilePic = post.querySelector('img[src*="cdninstat"]') || post.querySelector('img'); // Find the avatar image
-            if (!profilePic) return; // Skip if no image found
+            if (!profilePic) return; // Skip if no image found (e.g. skeleton loaders)
 // 
             // The header is the container holding the profile pic and username // Structure identification
             const header = profilePic.closest('header') || profilePic.closest('div[role="button"]') || profilePic.parentElement.closest('div'); // Find nearest semantic or functional container
@@ -50,8 +52,11 @@
 // 
     blockCollaboratorPosts(); // Execute blocking immediately
 // 
-    const observer = new MutationObserver(() => { // Watch for dynamic feed loading
-        blockCollaboratorPosts(); // Re-run logic on DOM mutations
+    // Set up an efficient observer to handle dynamic feed loading // Monitoring strategy
+    let timeout; // Variable to store timeout for debouncing
+    const observer = new MutationObserver(() => { // Initialize the MutationObserver
+        if (timeout) clearTimeout(timeout); // Clear existing timeout to debounce calls
+        timeout = setTimeout(blockCollaboratorPosts, 100); // Wait for DOM to settle before processing
     }); // End of observer definition
 // 
     observer.observe(document.documentElement, { // Start monitoring the page
