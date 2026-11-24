@@ -25,6 +25,11 @@ A collection of minimalist Userscripts to clean up Instagram on iPhone Safari, h
 - **Function**: Hides posts that are collaborations between multiple accounts.
 - **Context-Aware**: Only runs on the main home feed to preserve profile integrity.
 
+### 6. Keyword Blocker (`instagram.keyword.blocker.js`)
+- **Function**: Hides posts containing user-chosen keywords or phrases (including image alt text).
+- **Dynamic Controls**: Provides an on-page filter button and panel saved in `localStorage`.
+- **Context-Aware**: Only hides posts on the main home feed to preserve profile integrity.
+
 ## Installation for iPhone
 
 1. **Install a Script Manager**: Download the [Userscripts](https://apps.apple.com/app/userscripts/id1463298887) extension from the App Store.

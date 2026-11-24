@@ -16,6 +16,7 @@ Download the "Userscripts" app from the Apple App Store.
    c) "instagram.repost.remover.js" (Removes reposted posts)
    d) "instagram.following.switcher.js" (Ensures you are always on the "Following" feed)
    e) "instagram.collaborator.blocker.js" (Removes posts with multiple collaborators)
+   f) "instagram.keyword.blocker.js" (Hides posts matching your custom blocked words)
 
 4. START BROWSING
 - Open Safari and go to instagram.com.
